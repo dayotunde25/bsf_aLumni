@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-user-edit"></i> Edit Profile</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="first_name" class="form-label">First Name</label>
+                <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user.first_name }}">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Last Name</label>
+                <input type="text" id="last_name" name="last_name" class="form-control" value="{{ user.last_name }}">
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}">
+    </div>
+    <div class="mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="text" id="phone" name="phone" class="form-control" value="{{ user.phone }}">
+    </div>
+    <div class="mb-3">
+        <label for="bio" class="form-label">Bio</label>
+        <textarea id="bio" name="bio" class="form-control" rows="3">{{ user.bio }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea id="address" name="address" class="form-control" rows="3">{{ user.address }}</textarea>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="birthday_month" class="form-label">Birthday Month</label>
+                <select id="birthday_month" name="birthday_month" class="form-select">
+                    <option value="">--</option>
+                    {% for month_num, month_name in months %}
+                        <option value="{{ month_num }}" {% if user.birthday_month == month_num %}selected{% endif %}>{{ month_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="birthday_day" class="form-label">Birthday Day</label>
+                <select id="birthday_day" name="birthday_day" class="form-select">
+                    <option value="">--</option>
+                    {% for day, day_num in days %}
+                        <option value="{{ day }}" {% if user.birthday_day == day %}selected{% endif %}>{{ day_num }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="fellowship_years" class="form-label">Fellowship Years (comma-separated)</label>
+        <input type="text" id="fellowship_years" name="fellowship_years" class="form-control" value="{{ user.get_fellowship_years|join:', ' }}">
+    </div>
+    <div class="mb-3">
+        <label for="profile_picture" class="form-label">Profile Picture</label>
+        <input type="file" id="profile_picture" name="profile_picture" class="form-control">
+        {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="img-thumbnail mt-2" width="150">
+        {% endif %}
+    </div>
+    <hr>
+    
+    <h3>Executive Roles</h3>
+    {{ executive_formset.management_form }}
+    {% for form in executive_formset.forms %}
+        <div class="row formset-row">
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            <div class="col-md-4">{{ form.position.label_tag }} {{ form.position }}</div>
+            <div class="col-md-3">{{ form.session.label_tag }} {{ form.session }}</div>
+            <div class="col-md-2">{{ form.start_year.label_tag }} {{ form.start_year }}</div>
+            <div class="col-md-2">{{ form.end_year.label_tag }} {{ form.end_year }}</div>
+            <div class="col-md-1">{{ form.DELETE.label_tag }} {{ form.DELETE }}</div>
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h3>Worker Units</h3>
+    {{ worker_formset.management_form }}
+    {% for form in worker_formset.forms %}
+        <div class="row formset-row">
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            <div class="col-md-4">{{ form.unit_name.label_tag }} {{ form.unit_name }}</div>
+            <div class="col-md-3">{{ form.session.label_tag }} {{ form.session }}</div>
+            <div class="col-md-2">{{ form.start_year.label_tag }} {{ form.start_year }}</div>
+            <div class="col-md-2">{{ form.end_year.label_tag }} {{ form.end_year }}</div>
+            <div class="col-md-1">{{ form.DELETE.label_tag }} {{ form.DELETE }}</div>
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h3>Posts</h3>
+    {{ post_formset.management_form }}
+    {% for form in post_formset.forms %}
+        <div class="row formset-row">
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            <div class="col-md-4">{{ form.post_name.label_tag }} {{ form.post_name }}</div>
+            <div class="col-md-3">{{ form.session.label_tag }} {{ form.session }}</div>
+            <div class="col-md-2">{{ form.start_year.label_tag }} {{ form.start_year }}</div>
+            <div class="col-md-2">{{ form.end_year.label_tag }} {{ form.end_year }}</div>
+            <div class="col-md-1">{{ form.DELETE.label_tag }} {{ form.DELETE }}</div>
+        </div>
+    {% endfor %}
+
+    <hr>
+
+    <h3>Levels</h3>
+    {{ level_formset.management_form }}
+    {% for form in level_formset.forms %}
+        <div class="row formset-row">
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            <div class="col-md-4">{{ form.level_name.label_tag }} {{ form.level_name }}</div>
+            <div class="col-md-3">{{ form.session.label_tag }} {{ form.session }}</div>
+            <div class="col-md-2">{{ form.start_year.label_tag }} {{ form.start_year }}</div>
+            <div class="col-md-2">{{ form.end_year.label_tag }} {{ form.end_year }}</div>
+            <div class="col-md-1">{{ form.DELETE.label_tag }} {{ form.DELETE }}</div>
+        </div>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success mt-3"><i class="fas fa-save"></i> Save Changes</button>
+</form>
+{% endblock %}

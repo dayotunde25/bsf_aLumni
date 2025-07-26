@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}User Directory - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<style>
+    .list-group-item {
+        transition: all 0.2s ease-in-out;
+    }
+    .list-group-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+    }
+</style>
+<h1 class="mb-4"><i class="fas fa-users"></i> Alumni Directory</h1>
+
+<form method="get" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="Search by name">
+        </div>
+        <div class="col-md-3">
+            <select name="session" class="form-select">
+                <option value="">All Sessions</option>
+                {% for session in sessions %}
+                    <option value="{{ session }}" {% if request.GET.session == session %}selected{% endif %}>{{ session }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="role" class="form-select">
+                <option value="">All Roles/Units</option>
+                {% for role in roles %}
+                    <option value="{{ role }}" {% if request.GET.role == role %}selected{% endif %}>{{ role }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-success"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </div>
+</form>
+
+{% if users %}
+    <div class="list-group">
+        {% for user in users %}
+            <a href="{% url 'users:profile' user.id %}" class="list-group-item list-group-item-action mb-2 rounded shadow-sm">
+<div class="d-flex align-items-center">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.get_full_name }}" class="rounded-circle me-3" width="50" height="50">
+                    {% else %}
+                        <img src="{% static 'images/logo.png' %}" alt="Default Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                    {% endif %}
+                    <div>
+                        <h5 class="mb-0">{{ user.get_full_name|default:user.username }}</h5>
+                        <small class="text-muted">
+                            {% if user.executive_roles %}
+                                {{ user.executive_roles|join:", " }} |
+                            {% endif %}
+                            {% if user.workers_units %}
+                                {{ user.workers_units|join:", " }} |
+                            {% endif %}
+                            Sessions: {{ user.sessions|join:", " }}
+                        </small>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <nav aria-label="User directory pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                {% endif %}
+
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <p class="text-muted">No users found.</p>
+{% endif %}
+{% endblock %}

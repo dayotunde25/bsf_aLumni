@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mentorship - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-user-tie"></i> Mentorship</h1>
+
+<h3>Available Mentors</h3>
+{% if mentors %}
+    <div class="list-group mb-4">
+        {% for mentor in mentors %}
+            <a href="{% url 'mentorship:mentor_profile' mentor.id %}" class="list-group-item list-group-item-action mb-2 rounded shadow-sm">
+                <div class="d-flex align-items-center">
+                    {% if mentor.profile_picture %}
+                        <img src="{{ mentor.profile_picture.url }}" alt="{{ mentor.get_full_name }}" class="rounded-circle me-3" width="50" height="50">
+                    {% else %}
+                        <img src="{% static 'images/logo.png' %}" alt="Default Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                    {% endif %}
+                    <div>
+                        <h5 class="mb-0">{{ mentor.get_full_name|default:mentor.username }}</h5>
+                        <small class="text-muted">{{ mentor.department }} | Interests: {{ mentor.interests|join:", " }}</small>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-muted">No mentors available at this time.</p>
+{% endif %}
+
+<h3>Request Mentorship</h3>
+<form method="post" class="mb-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="interest" class="form-label">Area of Interest</label>
+        <input type="text" id="interest" name="interest" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="department" class="form-label">Department</label>
+        <input type="text" id="department" name="department" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> Submit Request</button>
+</form>
+
+{% if matches %}
+    <h3>Your Matches</h3>
+    <div class="list-group">
+        {% for match in matches %}
+            <a href="{% url 'mentorship:mentor_profile' match.mentor.id %}" class="list-group-item list-group-item-action mb-2 rounded shadow-sm">
+                <div class="d-flex align-items-center">
+                    {% if match.mentor.profile_picture %}
+                        <img src="{{ match.mentor.profile_picture.url }}" alt="{{ match.mentor.get_full_name }}" class="rounded-circle me-3" width="50" height="50">
+                    {% else %}
+                        <img src="{% static 'images/logo.png' %}" alt="Default Profile Picture" class="rounded-circle me-3" width="50" height="50">
+                    {% endif %}
+                    <div>
+                        <h5 class="mb-0">{{ match.mentor.get_full_name|default:match.mentor.username }}</h5>
+                        <small class="text-muted">{{ match.mentor.department }} | Interests: {{ match.mentor.interests|join:", " }}</small>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

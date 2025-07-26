@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex align-items-center mb-4 fade-in-up">
+            <img src="{% load static %}{% static 'images/logo.png' %}" alt="BSF Logo" height="60" class="me-3 pulse-animation">
+            <div>
+                <h1 class="mb-0" style="color: var(--primary-green);"><i class="fas fa-home"></i> Welcome to Baptist Student Fellowship</h1>
+                <p class="text-muted slide-in-left">Connecting past and present members in faith and fellowship</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if birthday_users %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-success birthday-banner bounce-animation" style="background: linear-gradient(135deg, var(--success-green) 0%, var(--light-green) 100%); border: 2px solid var(--primary-green);">
+            <h4 class="alert-heading"><i class="fas fa-birthday-cake"></i> 🎉 Today's Birthdays!</h4>
+            <p class="mb-0">
+                {% for user in birthday_users %}
+                    <strong>{{ user.get_full_name|default:user.username }}</strong>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                – Happy Birthday! 🎂
+            </p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header" style="background-color: #A8D5BA;">
+                <h5 class="mb-0" style="color: #2D4739;">Recent Announcements</h5>
+            </div>
+            <div class="card-body">
+                {% for announcement in recent_announcements %}
+                    <div class="border-bottom pb-3 mb-3">
+                        <h6>{{ announcement.title }}</h6>
+                        <p class="text-muted small">{{ announcement.created_at|date:"M d, Y" }}</p>
+                        <p>{{ announcement.content|truncatewords:30 }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No recent announcements.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header" style="background-color: #A8D5BA;">
+                <h5 class="mb-0" style="color: #2D4739;">Quick Links</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'users:directory' %}" class="btn btn-outline-success"><i class="fas fa-users"></i> Alumni Directory</a>
+                    <a href="{% url 'chat:chat_rooms' %}" class="btn btn-outline-success"><i class="fas fa-comments"></i> Messages</a>
+                    <a href="{% url 'gallery:index' %}" class="btn btn-outline-success"><i class="fas fa-images"></i> Photo Gallery</a>
+                    <a href="{% url 'prayer:prayer_wall' %}" class="btn btn-outline-success"><i class="fas fa-praying-hands"></i> Prayer Wall</a>
+                    <a href="{% url 'jobs:job_board' %}" class="btn btn-outline-success"><i class="fas fa-briefcase"></i> Job Board</a>
+                    <a href="{% url 'mentorship:mentors' %}" class="btn btn-outline-success"><i class="fas fa-user-tie"></i> Mentorship</a>
+                    <a href="{% url 'resources:resource_hub' %}" class="btn btn-outline-success"><i class="fas fa-book"></i> Resources</a>
+                    <a href="{% url 'history:fellowship_history' %}" class="btn btn-outline-success"><i class="fas fa-history"></i> History</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header" style="background-color: #A8D5BA;">
+                <h5 class="mb-0" style="color: #2D4739;">Recent Photos</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for media in recent_media %}
+                        <div class="col-6 mb-2">
+                            <img src="{{ media.file.url }}" class="img-fluid rounded" alt="{{ media.title }}">
+                        </div>
+                    {% empty %}
+                        <p class="text-muted">No recent photos.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Fellowship History - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-history"></i> Fellowship History Timeline</h1>
+
+{% if milestones %}
+    <div class="timeline">
+        {% for milestone in milestones %}
+            <div class="timeline-item mb-4 p-3 border rounded shadow-sm">
+                <h5>{{ milestone.title }}</h5>
+                <small class="text-muted">{{ milestone.date|date:"M d, Y" }}</small>
+                <p>{{ milestone.description }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="text-muted">No historical milestones available.</p>
+{% endif %}
+
+<h3>Past Presidents & Executives</h3>
+{% if past_executives %}
+    <ul class="list-group mb-4">
+        {% for exec in past_executives %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ exec.name }} - {{ exec.position }} ({{ exec.session }})
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-muted">No past executives data available.</p>
+{% endif %}
+
+<h3>Revival & Outreach Dates</h3>
+{% if revival_dates %}
+    <ul class="list-group">
+        {% for event in revival_dates %}
+            <li class="list-group-item">
+                {{ event.title }} - {{ event.date|date:"M d, Y" }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="text-muted">No revival or outreach events available.</p>
+{% endif %}
+{% endblock %}

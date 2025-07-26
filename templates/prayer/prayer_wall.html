@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Prayer Wall - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-praying-hands"></i> Prayer Wall</h1>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="post" class="mb-4">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="prayer_request" class="form-label">Your Prayer Request</label>
+        <textarea id="prayer_request" name="prayer_request" class="form-control" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success"><i class="fas fa-paper-plane"></i> Submit Prayer</button>
+</form>
+
+{% if prayer_requests %}
+    <div class="list-group">
+        {% for prayer in prayer_requests %}
+            <div class="list-group-item mb-3 p-3 border rounded shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong>{{ prayer.user.get_full_name|default:prayer.user.username }}</strong>
+                    <small class="text-muted">{{ prayer.created_at|date:"M d, Y H:i" }}</small>
+                </div>
+                <p>{{ prayer.content }}</p>
+                <div>
+                    <button class="btn btn-outline-primary btn-sm me-2" data-prayer-id="{{ prayer.id }}" onclick="markPraying(this)">
+                        <i class="fas fa-praying-hands"></i> I'm Praying ({{ prayer.praying_count }})
+                    </button>
+                    <a href="{% url 'prayer:comments' prayer.id %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-comments"></i> Comments ({{ prayer.comments_count }})
+                    </a>
+                    {% if prayer.answered %}
+                        <span class="badge bg-success ms-3">Answered</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <nav aria-label="Prayer requests pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                {% endif %}
+
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <p class="text-muted">No prayer requests found.</p>
+{% endif %}
+
+<script>
+function markPraying(button) {
+    const prayerId = button.getAttribute('data-prayer-id');
+    fetch(`/prayer/mark_praying/${prayerId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    }).then(response => {
+        if (response.ok) {
+            location.reload();
+        } else {
+            alert('Failed to mark praying.');
+        }
+    });
+}
+</script>
+{% endblock %}

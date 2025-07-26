@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load gallery_extras %}
+{% block title %}Gallery - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-images"></i> Photo & Video Gallery</h1>
+
+<form method="get" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <select name="event_type" class="form-select">
+                <option value="">All Event Types</option>
+                {% for event_type in event_types %}
+                    <option value="{{ event_type }}" {% if request.GET.event_type == event_type %}selected{% endif %}>{{ event_type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <select name="year" class="form-select">
+                <option value="">All Years</option>
+                {% for year in years %}
+                    <option value="{{ year }}" {% if request.GET.year == year|stringformat:"s" %}selected{% endif %}>{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4 d-grid">
+            <button type="submit" class="btn btn-success"><i class="fas fa-filter"></i> Filter</button>
+        </div>
+    </div>
+</form>
+
+{% if media_items %}
+    <div class="row g-3">
+        {% for media in media_items %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <div class="card shadow-sm">
+{% if media.file.url|endswith:".mp4" %}
+                        <video controls class="img-fluid rounded-top" alt="{{ media.title }}">
+                            <source src="{{ media.file.url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% else %}
+                        <img src="{{ media.file.url }}" class="card-img-top rounded-top" alt="{{ media.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h6 class="card-title">{{ media.title }}</h6>
+                        <p class="card-text text-muted small">{{ media.event_name }} - {{ media.session }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <nav aria-label="Gallery pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                {% endif %}
+
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <p class="text-muted">No media items found.</p>
+{% endif %}
+{% endblock %}

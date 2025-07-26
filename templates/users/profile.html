@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}User Profile - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 text-center">
+        {% if profile_user.profile_picture %}
+            <img src="{{ profile_user.profile_picture.url }}" alt="{{ profile_user.get_full_name }}" class="img-thumbnail rounded-circle mb-3" width="150" height="150">
+        {% else %}
+            <img src="{% static 'images/logo.png' %}" alt="{{ profile_user.get_full_name }}" class="img-thumbnail rounded-circle mb-3" width="150" height="150">
+        {% endif %}
+        <h3>{{ profile_user.get_full_name|default:profile_user.username }}</h3>
+        <p class="text-muted">{{ profile_user.email }}</p>
+        <p>
+            <strong>Sessions:</strong> {{ profile_user.get_fellowship_years|join:", " }}
+        </p>
+    </div>
+    <div class="col-md-8">
+        <h4>About</h4>
+        <p>{{ profile_user.bio|default:"No biography available." }}</p>
+        
+        <h4>Contact Information</h4>
+        <ul class="list-unstyled">
+            <li><strong>Phone:</strong> {{ profile_user.phone|default:"Not provided" }}</li>
+            <li><strong>Address:</strong> {{ profile_user.address|default:"Not provided" }}</li>
+        </ul>
+
+        {% if executive_roles %}
+            <h4>Executive Roles</h4>
+            <ul>
+                {% for role in executive_roles %}
+                    <li>{{ role.position }} ({{ role.session }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if worker_units %}
+            <h4>Worker Units</h4>
+            <ul>
+                {% for unit in worker_units %}
+                    <li>{{ unit.unit_name }} ({{ unit.session }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if posts %}
+            <h4>Posts</h4>
+            <ul>
+                {% for post in posts %}
+                    <li>{{ post.post_name }} ({{ post.session }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if levels %}
+            <h4>Levels</h4>
+            <ul>
+                {% for level in levels %}
+                    <li>{{ level.level_name }} ({{ level.session }})</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if user.is_authenticated and user != profile_user %}
+            <a href="{% url 'chat:start_private_chat' profile_user.id %}" class="btn btn-primary">Start Chat</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,142 @@
+:root {
+    --primary-green: #28a745;
+    --light-green: #A8D5BA;
+    --dark-green: #1e7e34;
+    --accent-green: #40e0d0;
+    --success-green: #d4edda;
+    --text-dark: #2c3e50;
+    --text-light: #6c757d;
+    --white: #ffffff;
+    --light-gray: #f8f9fa;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+/* Animated Elements */
+.fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.slide-in-left {
+    animation: slideInLeft 0.6s ease-out;
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+.bounce-animation {
+    animation: bounce 2s infinite;
+}
+
+.navbar-brand img {
+    border-radius: 50%;
+}
+
+.btn-success {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: var(--text-dark);
+}
+
+.btn-success:hover {
+    background-color: #8bc49c;
+    border-color: #8bc49c;
+}
+
+.btn-outline-success {
+    color: var(--text-dark);
+    border-color: var(--primary-green);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    color: var(--text-dark);
+}
+
+.card-header {
+    font-weight: 600;
+}
+
+.birthday-banner {
+    background: linear-gradient(135deg, var(--accent-green), var(--primary-green));
+    border: none;
+    color: var(--text-dark);
+}
+
+.chat-message {
+    max-width: 70%;
+    margin-bottom: 10px;
+}
+
+.chat-message.sent {
+    margin-left: auto;
+    background-color: var(--primary-green);
+}
+
+.chat-message.received {
+    background-color: #e9ecef;
+}

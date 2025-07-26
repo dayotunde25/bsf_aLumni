@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Resource Hub - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-book"></i> Resource Hub</h1>
+
+<form method="get" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category }}" {% if request.GET.category == category %}selected{% endif %}>{{ category }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6 d-grid">
+            <button type="submit" class="btn btn-success"><i class="fas fa-filter"></i> Filter</button>
+        </div>
+    </div>
+</form>
+
+{% if resources %}
+    <div class="list-group">
+        {% for resource in resources %}
+            <a href="{{ resource.file.url }}" class="list-group-item list-group-item-action mb-2 rounded shadow-sm" target="_blank" download>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">{{ resource.title }}</h5>
+                        <small class="text-muted">{{ resource.category }} - {{ resource.uploaded_at|date:"M d, Y" }}</small>
+                    </div>
+                    <i class="fas fa-download fa-lg text-success"></i>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <nav aria-label="Resource hub pagination" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                {% endif %}
+
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <p class="text-muted">No resources found.</p>
+{% endif %}
+{% endblock %}

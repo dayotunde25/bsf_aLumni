@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Chat Rooms - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-comments"></i> Chat Rooms</h1>
+
+<div class="list-group">
+    {% for room in chat_rooms %}
+        <a href="{% url 'chat:chat_room' room.id %}" class="list-group-item list-group-item-action">
+            {{ room.name }}
+        </a>
+    {% empty %}
+        <p class="text-muted">You are not a part of any chat rooms yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

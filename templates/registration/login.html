@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card fade-in-up">
+                <div class="card-header text-center">
+                    <img src="{% static 'images/logo.png' %}" alt="BSF Logo" height="60" class="mb-3 pulse-animation">
+                    <h3><i class="fas fa-sign-in-alt text-success"></i> Welcome Back</h3>
+                    <p class="text-muted">Sign in to your fellowship account</p>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} slide-in-left">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger slide-in-left">
+                            <i class="fas fa-exclamation-triangle"></i> Please correct the errors below.
+                        </div>
+                    {% endif %}
+
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user"></i> Username
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                            <div class="invalid-feedback">Please enter your username.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock"></i> Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="invalid-feedback">Please enter your password.</div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
+                            <label class="form-check-label" for="remember_me">
+                                Remember me
+                            </label>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> Sign In
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p>Don't have an account? <a href="{% url 'users:register' %}" class="text-success">Register here</a></p>
+                        <p><a href="#" class="text-muted">Forgot your password?</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Card -->
+            <div class="card mt-4 fade-in-up" style="animation-delay: 0.3s;">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-success">
+                        <i class="fas fa-users"></i> Join Our Growing Community
+                    </h5>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="stats-number">500+</div>
+                            <small class="text-muted">Members</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="stats-number">50+</div>
+                            <small class="text-muted">Events</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="stats-number">10+</div>
+                            <small class="text-muted">Years</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Bootstrap form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %}

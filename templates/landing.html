@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Welcome - Baptist Student Fellowship{% endblock %}
+
+{% block content %}
+<style>
+  .landing-hero {
+    position: relative;
+    height: 100vh;
+    background: url("{% static 'images/BSFFPI-removebg-preview.png' %}") no-repeat center center fixed;
+    background-size: contain;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #2D4739;
+    text-shadow: 2px 2px 4px rgba(255,255,255,0.7);
+    animation: fadeIn 2s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .landing-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    animation: pulse 3s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { text-shadow: 0 0 10px #A8D5BA; }
+    50% { text-shadow: 0 0 20px #DFF0D8; }
+  }
+
+  .landing-subtitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+  }
+
+  .landing-section {
+    padding: 4rem 2rem;
+    background-color: #DFF0D8;
+    color: #2D4739;
+  }
+
+  .landing-section h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .landing-section p {
+    max-width: 700px;
+    margin: 0 auto 1rem auto;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .landing-nav a {
+    margin: 0 1rem;
+    font-weight: 600;
+    color: #2D4739;
+    text-decoration: none;
+  }
+
+  .landing-nav a:hover {
+    color: #A8D5BA;
+  }
+
+  footer {
+    background-color: #A8D5BA;
+    color: #2D4739;
+    padding: 1rem 0;
+    text-align: center;
+  }
+</style>
+
+<div class="landing-hero text-center">
+  <h1 class="landing-title">Baptist Student Fellowship</h1>
+  <p class="landing-subtitle">Founded 1975 | Nigerian Baptist Convention | The Federal Polytechnic Ilaro</p>
+  <div class="landing-nav">
+    <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+    <a href="{% url 'users:register' %}"><i class="fas fa-user-plus"></i> Register</a>
+  </div>
+</div>
+
+<section class="landing-section">
+  <div class="container">
+    <h2>About Baptist Student Fellowship</h2>
+    <p>The Baptist Student Fellowship (BSF) is a vibrant community of past and present students united in faith and fellowship. Established in 1975 under the Nigerian Baptist Convention at The Federal Polytechnic Ilaro, BSF has been a beacon of spiritual growth, service, and camaraderie.</p>
+    <p>Our mission is to nurture spiritual development, foster meaningful relationships, and empower members to impact their communities positively.</p>
+  </div>
+</section>
+
+<section class="landing-section" style="background-color: #A8D5BA; color: #DFF0D8;">
+  <div class="container">
+    <h2>Contact Us</h2>
+    <p>Email: info@bsfilaro.org.ng</p>
+    <p>Phone: +234 123 456 7890</p>
+    <p>Address: The Federal Polytechnic Ilaro, Ogun State, Nigeria</p>
+  </div>
+</section>
+
+<footer>
+  &copy; {{ now.year }} Baptist Student Fellowship. All rights reserved.
+</footer>
+{% endblock %}

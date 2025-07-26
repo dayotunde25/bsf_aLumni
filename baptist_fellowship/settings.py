@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-me')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = ['bsf-alumni.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['bsf-alumni.onrender.com', 'localhost']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
